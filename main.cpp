@@ -1,9 +1,11 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <filesystem>
+#include <format>
 #include <lexertl/generator.hpp>
 #include <iostream>
 #include <lexertl/iterator.hpp>
 #include <lexertl/memory_file.hpp>
+#include <span>
 #include <string_view>
 #include <vector>
 
