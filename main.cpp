@@ -37,7 +37,7 @@ void build_indexes(const mf_vector& dictionaries, sv_vector& indexes)
 		count += std::count(dict.data(), dict.data() + dict.size(), '\n');
 	}
 
-	indexes.resize(count);
+	indexes.reserve(count);
 
 	std::size_t idx = 0;
 
@@ -47,7 +47,7 @@ void build_indexes(const mf_vector& dictionaries, sv_vector& indexes)
 
 		for (; iter->id; ++iter, ++idx)
 		{
-			indexes[idx] = iter->view();
+			indexes.push_back(iter->view());
 		}
 	}
 
