@@ -11,4 +11,6 @@ Simple spell checker
 Note that if no pathnames are supplied, input is taken from stdin.
 
 ## Dictionaries
-Google: `dictionary word list text file` for sample dictionaries. Be aware that spell_check expects all words to be lower case.
+Google: `dictionary word list text file` for sample dictionaries.
+If words in the dictionary are all lower case, then checking will
+be case insensitive or case sensitive otherwise.
