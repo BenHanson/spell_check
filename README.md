@@ -2,15 +2,19 @@
 Simple spell checker
 
 ## Building
-`g++ -o spell_check main.cpp -std=c++20 -I ../lexertl17/include -I ../../boost_1_77_0`
+- There is a Makefile for Linux
+- There is a VS .sln for Windows
 
 ## Usage
-`spell_check [pathname...] [(--word-regex|-w) <regex>]
-((--dictionary|-d) <pathname to whitespace separated word list>)+`
+```
+spell_check [pathname...]
+[(--word-regex|-w) <regex>]
+[(--filter|-f) <pathname to flex style lexer spec>]
+((--dictionary|-d) <pathname to whitespace separated word list>)+
+
+```
 
 Note that if no pathnames are supplied, input is taken from stdin.
 
 ## Dictionaries
-Google: `dictionary word list text file` for sample dictionaries.
-If words in the dictionary are all lower case, then checking will
-be case insensitive or case sensitive otherwise.
+Google: `dictionary word list text file` for sample dictionaries. Be aware that spell_check expects all words to be lower case.
