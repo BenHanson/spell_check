@@ -219,7 +219,7 @@ L?R\"\((?s:.)*?\)\"                                                   1
 [uU]'({EscapeSequence}|{UniversalChar}|{any}{-}[\n\r\\'])'            skip()
 ([uU]|u8)\"({EscapeSequence}|{UniversalChar}|{any}{-}[\n\r\\"])*\"    1
 ([uU]|u8)R\"\((?s:.)*?\)\"                                            1
-([a-zA-Z_$]|{UniversalChar})([a-zA-Z_0-9$]|{UniversalChar})*          1
+([a-zA-Z_$]|{UniversalChar})([a-zA-Z_0-9$]|{UniversalChar})*          skip()
 {Pound}{PPSpace}(include|include_next){PPSpace}<({any}{-}[\n\r>])+>   skip()
 {Pound}{PPSpace}(include|include_next){PPSpace}\"({any}{-}[\n\r"])+\" skip()
 {Pound}{PPSpace}(include|include_next){PPSpace}                       skip()

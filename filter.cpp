@@ -13,9 +13,7 @@
 #include <iostream>
 #include <string>
 
-config_parser g_config_parser;
-
-static void build_config_parser()
+static void build_config_parser(config_parser& config)
 {
     parsertl::rules grules;
     lexertl::rules lrules;
@@ -28,7 +26,7 @@ static void build_config_parser()
 
     // Token regex macros
     grules.push("rx_macros", "%empty");
-    g_config_parser._actions[grules.push("rx_macros",
+    config._actions[grules.push("rx_macros",
         "rx_macros MacroName regex")] =
         [](config_state& state, const config_parser& parser)
         {
@@ -43,7 +41,7 @@ static void build_config_parser()
 
     // Tokens
     grules.push("rx_rules", "%empty");
-    g_config_parser._actions[grules.push("rx_rules", "rx_rules regex Number")] =
+    config._actions[grules.push("rx_rules", "rx_rules regex Number")] =
         [](config_state& state, const config_parser& parser)
         {
             const auto& token = state._results.dollar(1, parser._gsm,
@@ -54,7 +52,7 @@ static void build_config_parser()
 
             state._lrules.push(regex, atoi(number.c_str()) & 0xffff);
         };
-    g_config_parser._actions[grules.push("rx_rules",
+    config._actions[grules.push("rx_rules",
         "rx_rules StartState regex ExitState")] =
         [](config_state& state, const config_parser& parser)
         {
@@ -70,7 +68,7 @@ static void build_config_parser()
                 std::string(exit_state.first + 1,
                     exit_state.second - 1).c_str());
         };
-    g_config_parser._actions[grules.push("rx_rules",
+    config._actions[grules.push("rx_rules",
         "rx_rules StartState regex ExitState Number")] =
         [](config_state& state, const config_parser& parser)
         {
@@ -89,7 +87,7 @@ static void build_config_parser()
                 std::string(exit_state.first + 1,
                     exit_state.second - 1).c_str());
         };
-    g_config_parser._actions[grules.push("rx_rules",
+    config._actions[grules.push("rx_rules",
         "rx_rules regex 'skip()'")] =
         [](config_state& state, const config_parser& parser)
         {
@@ -99,7 +97,7 @@ static void build_config_parser()
 
             state._lrules.push(regex, lexertl::rules::skip());
         };
-    g_config_parser._actions[grules.push("rx_rules",
+    config._actions[grules.push("rx_rules",
         "rx_rules StartState regex ExitState 'skip()'")] =
         [](config_state& state, const config_parser& parser)
         {
@@ -142,8 +140,7 @@ static void build_config_parser()
 
     std::string warnings;
 
-    //parsertl::debug::dump(grules, std::cout);
-    parsertl::generator::build(grules, g_config_parser._gsm, &warnings);
+    parsertl::generator::build(grules, config._gsm, &warnings);
 
     if (!warnings.empty())
     {
@@ -206,14 +203,15 @@ static void build_config_parser()
         grules.token_id("ExitState"), "ID");
     lrules.push("RULE,ID", "{nl}", lexertl::rules::skip(), "RULE");
     lrules.push("ID", R"(skip\s*\(\s*\))", grules.token_id("'skip()'"), "RULE");
-    lexertl::generator::build(lrules, g_config_parser._lsm);
+    lexertl::generator::build(lrules, config._lsm);
 }
 
-lexertl::state_machine build_filter_lexer(const std::string& pathname)
+lexertl::state_machine build_filter_lexer(const char* pathname,
+    config_parser& config)
 {
-	lexertl::memory_file mf(pathname.c_str());
+    lexertl::memory_file mf(pathname);
     config_state  cfg;
 
-    build_config_parser();
-    return cfg.parse(pathname);
+    build_config_parser(config);
+    return cfg.parse(pathname, config);
 }

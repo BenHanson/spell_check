@@ -24,6 +24,9 @@
     <ClCompile Include="types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pathnames.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="filter.hpp">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="spellc_error.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pathnames.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
