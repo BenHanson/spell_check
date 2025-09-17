@@ -23,6 +23,9 @@ static void check_range(const char* pathname, const char* start,
 
     for (; iter->id != 0; ++iter)
     {
+        if (iter->length() < 2)
+            continue;
+
         lhs = data._icase ?
             boost::to_lower_copy(iter->str()) :
             iter->str();
@@ -45,7 +48,7 @@ int main(int argc, const char* argv[])
     if (argc == 1 || (argc == 2 && std::string_view(argv[1]) == "--help"))
     {
         std::cout << "Usage: spell_check [pathname...]\n"
-            //"[(--recurse|-r)]\n"
+            "[(--recurse|-r)]\n"
             "[(--word-regex|-w) <regex>]\n"
             "[(--filter|-f) <pathname to flex style lexer spec>]\n"
             "((--dictionary|-d) <pathname to whitespace separated word list>)+\n";

@@ -232,7 +232,7 @@ void data_t::create(const std::span<const char*>& params)
             }
             else if (param == "-r" || param == "--recurse")
             {
-                _recurse = true;
+                _recurse = _pathnames._recurse = true;
             }
             else if (param == "-w" || param == "--word-regex")
             {
@@ -300,19 +300,40 @@ void data_t::process(void(*func)(const char* pathname,
     {
         std::error_code err;
 
-        for (auto iter = fs::directory_iterator(path,
-            fs::directory_options::skip_permission_denied, err),
-            end = fs::directory_iterator(); iter != end; ++iter)
+        if (_recurse)
         {
-            const auto& p = iter->path();
-            // Don't throw if there is a Unicode pathname
-            const std::string pathname = std::bit_cast<const char*>
-                (p.u8string().c_str());
-
-            if (!fs::is_directory(p) &&
-                _pathnames.process_file(pathname.c_str(), wcs))
+            for (auto iter = fs::recursive_directory_iterator(path,
+                fs::directory_options::skip_permission_denied, err),
+                end = fs::recursive_directory_iterator(); iter != end; ++iter)
             {
-                func(pathname.c_str(), *this);
+                const auto& p = iter->path();
+                // Don't throw if there is a Unicode pathname
+                const std::string pathname = std::bit_cast<const char*>
+                    (p.u8string().c_str());
+
+                if (!fs::is_directory(p) &&
+                    _pathnames.process_file(pathname.c_str(), wcs))
+                {
+                    func(pathname.c_str(), *this);
+                }
+            }
+        }
+        else
+        {
+            for (auto iter = fs::directory_iterator(path,
+                fs::directory_options::skip_permission_denied, err),
+                end = fs::directory_iterator(); iter != end; ++iter)
+            {
+                const auto& p = iter->path();
+                // Don't throw if there is a Unicode pathname
+                const std::string pathname = std::bit_cast<const char*>
+                    (p.u8string().c_str());
+
+                if (!fs::is_directory(p) &&
+                    _pathnames.process_file(pathname.c_str(), wcs))
+                {
+                    func(pathname.c_str(), *this);
+                }
             }
         }
     }
