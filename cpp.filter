@@ -21,8 +21,8 @@ PPSpace             ([ \t\f\v]|("/*"({any}{-}[*]|{Newline}|(\*+({any}{-}[*/]|{Ne
 Pound               #|"??="|%:
 NonDigit            [a-zA-Z_$]|{UniversalChar}
 %%
-"/*"([^*]|\*+[^*/])*\*+\/ skip()
-\/\/.*                    skip()
+"/*"([^*]|\*+[^*/])*\*+\/ 1
+\/\/.*                    1
 \.?{Digit}                skip()
 
  /* Keywords */
