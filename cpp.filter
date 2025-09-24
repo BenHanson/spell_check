@@ -23,7 +23,9 @@ NonDigit            [a-zA-Z_$]|{UniversalChar}
 %%
 "/*"([^*]|\*+[^*/])*\*+\/ 1
 \/\/.*                    1
-\.?{Digit}                skip()
+\.?{Digit}(({FractionalConstant}{ExponentPart}?)|({Digit}+{ExponentPart})){FloatingSuffix}? skip()
+{Integer}                                                             skip()
+{Integer}({LongIntegerSuffix}|{MSLongIntegerSuffix}|{IntegerSuffix}?) skip()
 
  /* Keywords */
 alignas             skip()
