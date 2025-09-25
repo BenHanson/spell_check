@@ -15,6 +15,11 @@ static bool is_windows()
 #endif
 }
 
+bool pathnames::empty() const
+{
+    return _path_wcs.empty();
+}
+
 void pathnames::create(const string_vector& pns)
 {
     for (const auto& pn : pns)

@@ -9,6 +9,7 @@
 #include <exception>
 #include <iostream>
 #include <span>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -43,6 +44,25 @@ static void check_range(const char* pathname, const char* start,
     }
 }
 
+void check_spell(const char* pathname, const char* first, const char* second,
+    const data_t& data)
+{
+    if (data._filter_sm.empty())
+    {
+        check_range(pathname, first, first, second, data);
+    }
+    else
+    {
+        // Lex the file
+        lexertl::citerator iter(first, second, data._filter_sm);
+
+        for (; iter->id; ++iter)
+        {
+            check_range(pathname, first, iter->first, iter->second, data);
+        }
+    }
+}
+
 int main(int argc, const char* argv[])
 {
     if (argc == 1 || (argc == 2 && std::string_view(argv[1]) == "--help"))
@@ -60,30 +80,15 @@ int main(int argc, const char* argv[])
         data_t data;
 
         data.create(std::span<const char*>(argv, argc));
-        data.process([](const char* pathname, const data_t& data)
+        data.process([](const char* pathname, const data_t& gubbins)
             {
                 lexertl::memory_file mf(pathname);
 
-                if (data._filter_sm.empty())
-                {
-                    check_range(pathname, mf.data(), mf.data(),
-                        mf.data() + mf.size(), data);
-                }
-                else
-                {
-                    // Lex the file
-                    lexertl::citerator iter(mf.data(), mf.data() + mf.size(),
-                        data._filter_sm);
-
-                    for (; iter->id; ++iter)
-                    {
-                        check_range(pathname, mf.data(),
-                            iter->first, iter->second, data);
-                    }
-                }
+                check_spell(pathname, mf.data(), mf.data() + mf.size(),
+                    gubbins);
             });
 
-        /*if (input_pathnames.empty())
+        if (data._pathnames.empty())
         {
             // Read from cin
             std::ostringstream ss;
@@ -91,9 +96,8 @@ int main(int argc, const char* argv[])
 
             ss << std::cin.rdbuf();
             cin = ss.str();
-            check_spell(dict_indexes, filter_sm, word_sm, input_idx,
-                input_pathnames, icase);
-        }*/
+            check_spell("stdin", cin.c_str(), cin.c_str() + cin.size(), data);
+        }
 
         return 0;
     }

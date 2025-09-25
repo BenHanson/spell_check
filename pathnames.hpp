@@ -27,6 +27,7 @@ struct pathnames
     bool _recurse = false;
     std::map<std::string, wildcards, std::less<>> _path_wcs;
 
+    [[nodiscard]] bool empty() const;
     void create(const string_vector& pns);
     void add_pathname(std::string pn);
     bool process_file(const char* pathname, const wildcards& wcs) const;
