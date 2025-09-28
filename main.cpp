@@ -44,8 +44,8 @@ static void check_range(const char* pathname, const char* start,
     }
 }
 
-void check_spell(const char* pathname, const char* first, const char* second,
-    const data_t& data)
+static void check_spell(const char* pathname,
+    const char* first, const char* second, const data_t& data)
 {
     if (data._filter_sm.empty())
     {

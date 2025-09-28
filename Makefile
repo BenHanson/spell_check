@@ -8,8 +8,9 @@ LIBS =
 
 all: spell_check
 
-spell_check: filter.o main.o pathnames.o types.o
-	$(CXX) $(LDFLAGS) -o spell_check filter.o main.o pathnames.o types.o $(LIBS)
+spell_check: filter.o main.o output.o pathnames.o types.o utils.o
+	$(CXX) $(LDFLAGS) -o spell_check filter.o main.o output.o \
+pathnames.o types.o utils.o $(LIBS)
 
 filter.o: filter.cpp
 	$(CXX) $(CXXFLAGS) -o filter.o -c filter.cpp
@@ -17,11 +18,17 @@ filter.o: filter.cpp
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -o main.o -c main.cpp
 
+output.o: output.cpp
+	$(CXX) $(CXXFLAGS) -o output.o -c output.cpp
+
 pathnames.o: pathnames.cpp
 	$(CXX) $(CXXFLAGS) -o pathnames.o -c pathnames.cpp
 
 types.o: types.cpp
 	$(CXX) $(CXXFLAGS) -o types.o -c types.cpp
+
+utils.o: utils.cpp
+	$(CXX) $(CXXFLAGS) -o utils.o -c utils.cpp
 
 library:
 

@@ -48,15 +48,23 @@ using sv_vector = std::vector<std::string_view>;
 
 struct data_t
 {
-    bool _recurse = false;
+    directories _directories = directories::read;
+    bool _no_messages = false;
     bool _icase = false;
+    wildcards _include;
+    wildcards _exclude_dirs;
+    bool _follow_symlinks = false;
     config_parser _config_parser;
     mf_vector _dictionaries;
     sv_vector _dict_indexes;
     lexertl::state_machine _word_sm;
     lexertl::state_machine _filter_sm;
     pathnames _pathnames;
+    static inline const char _wa_text[] = "\x1b[38;5;229m";
 
     void create(const std::span<const char*>& params);
     void process(void(*func)(const char* pathname, const data_t& data));
+
+    bool include_dir(const std::string& path);
+    bool include_file(const std::string& path);
 };

@@ -10,6 +10,11 @@
 
 using string_vector = std::vector<std::string>;
 
+enum class directories
+{
+    read, recurse, skip
+};
+
 struct wildcards
 {
     struct wildcard
@@ -24,11 +29,12 @@ struct wildcards
 
 struct pathnames
 {
-    bool _recurse = false;
+    wildcards _exclude;
     std::map<std::string, wildcards, std::less<>> _path_wcs;
 
     [[nodiscard]] bool empty() const;
-    void create(const string_vector& pns);
-    void add_pathname(std::string pn);
-    bool process_file(const char* pathname, const wildcards& wcs) const;
+    void create(const string_vector& pns, const directories dir);
+    void add_pathname(std::string pn, const directories dir);
+    std::string_view normalise(const std::string& pathname);
+    bool process_file(const std::string& pathname, const wildcards& wcs) const;
 };

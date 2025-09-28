@@ -210,7 +210,7 @@ lexertl::state_machine build_filter_lexer(const char* pathname,
     config_parser& config)
 {
     lexertl::memory_file mf(pathname);
-    config_state  cfg;
+    config_state cfg;
 
     build_config_parser(config);
     return cfg.parse(pathname, config);

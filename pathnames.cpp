@@ -1,34 +1,29 @@
 #include "pathnames.hpp"
+#include "utils.hpp"
 
 #include <filesystem>
 #include <map>
 #include <string>
+#include <string_view>
 
 namespace fs = std::filesystem;
-
-static bool is_windows()
-{
-#ifdef _WIN32
-    return true;
-#else
-    return false;
-#endif
-}
 
 bool pathnames::empty() const
 {
     return _path_wcs.empty();
 }
 
-void pathnames::create(const string_vector& pns)
+void pathnames::create(const string_vector& pns, const directories dir)
 {
     for (const auto& pn : pns)
     {
-        add_pathname(pn);
+        add_pathname(dir == directories::recurse ?
+            (pn + static_cast<char>(fs::path::preferred_separator)) + '*' : pn,
+            dir);
     }
 }
 
-void pathnames::add_pathname(std::string pn)
+void pathnames::add_pathname(std::string pn, const directories dir)
 {
     const std::size_t wc_idx = pn.find_first_of("*?[");
     const std::size_t sep_idx = pn.rfind(fs::path::preferred_separator,
@@ -42,7 +37,7 @@ void pathnames::add_pathname(std::string pn)
     {
         if (!((!negate && wc_idx == 0) || (negate && wc_idx == 1)))
         {
-            if (_recurse)
+            if (dir == directories::recurse)
                 pn.insert(negate ? 1 : 0, std::string(1, '*') +
                     static_cast<char>(fs::path::preferred_separator));
             else
@@ -50,7 +45,7 @@ void pathnames::add_pathname(std::string pn)
                     static_cast<char>(fs::path::preferred_separator));
         }
     }
-    else if (_recurse && !((!negate && wc_idx == 0) ||
+    else if (dir == directories::recurse && !((!negate && wc_idx == 0) ||
         (negate && wc_idx == 1)))
     {
         pn = std::string(1, '*') + pn.substr(sep_idx);
@@ -73,28 +68,68 @@ void pathnames::add_pathname(std::string pn)
             std::string() });
 }
 
-bool pathnames::process_file(const char* pathname,
+std::string_view pathnames::normalise(const std::string& pathname)
+{
+    namespace fs = std::filesystem;
+    std::string_view pn = (pathname[0] == '.' &&
+        pathname[1] == fs::path::preferred_separator) ?
+        pathname.c_str() + 2 :
+        pathname.c_str();
+
+    return pn;
+}
+
+bool pathnames::process_file(const std::string& pathname,
     const wildcards& wcs) const
 {
-    bool process = !wcs._negative.empty();
+    bool process = false;
+    const char* filename = pathname.c_str() +
+        pathname.rfind(fs::path::preferred_separator) + 1;
+    bool skip = !_exclude._negative.empty();
 
-    for (const auto& pn : wcs._negative)
+    for (const auto& pn : _exclude._negative)
     {
-        if (!pn._wc.match(pathname))
+        if (!pn._wc.match(filename))
         {
-            process = false;
+            skip = false;
             break;
         }
     }
 
-    if (!process)
+    if (!skip)
     {
-        for (const auto& pn : wcs._positive)
+        for (const auto& pn : _exclude._positive)
         {
-            if (pn._wc.match(pathname))
+            if (pn._wc.match(filename))
             {
-                process = true;
+                skip = true;
                 break;
+            }
+        }
+    }
+
+    if (!skip)
+    {
+        process = !wcs._negative.empty();
+
+        for (const auto& pn : wcs._negative)
+        {
+            if (!pn._wc.match(pathname))
+            {
+                process = false;
+                break;
+            }
+        }
+
+        if (!process)
+        {
+            for (const auto& pn : wcs._positive)
+            {
+                if (pn._wc.match(pathname))
+                {
+                    process = true;
+                    break;
+                }
             }
         }
     }

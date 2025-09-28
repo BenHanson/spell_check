@@ -137,14 +137,19 @@
   <ItemGroup>
     <ClCompile Include="filter.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="output.cpp" />
     <ClCompile Include="pathnames.cpp" />
     <ClCompile Include="types.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="colours.hpp" />
     <ClInclude Include="filter.hpp" />
+    <ClInclude Include="output.hpp" />
     <ClInclude Include="pathnames.hpp" />
     <ClInclude Include="spellc_error.hpp" />
     <ClInclude Include="types.hpp" />
+    <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
