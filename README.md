@@ -8,13 +8,19 @@ Simple spell checker
 ## Usage
 ```
 spell_check [pathname...]
-[(--word-regex|-w) <regex>]
-[(--filter|-f) <pathname to flex style lexer spec>]
-((--dictionary|-d) <pathname to whitespace separated word list>)+
-
+  -r, --recurse
+      --include <wildcard>{;<wildcard>}
+      --exclude <wildcard>{;<wildcard>}
+      --exclude-dir <wildcard>{;<wildcard>}
+  -w, --word-regex <regex>
+  -f, --filter <pathname to flex style lexer spec>
+  -d, --dictionary <pathname to whitespace separated word list>
 ```
 
-Note that if no pathnames are supplied, input is taken from stdin.
+- --dictionary can be specified multiple times
+- --recurse means you specify paths to search rather than pathnames
+- If no pathnames are supplied, input is taken from stdin.
 
 ## Dictionaries
-Google: `dictionary word list text file` for sample dictionaries. Be aware that spell_check expects all words to be lower case.
+Google: `dictionary word list text file` for sample dictionaries.
+If you want case insensitive matching make all words lower case.
