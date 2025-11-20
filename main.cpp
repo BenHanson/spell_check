@@ -68,10 +68,13 @@ int main(int argc, const char* argv[])
     if (argc == 1 || (argc == 2 && std::string_view(argv[1]) == "--help"))
     {
         std::cout << "Usage: spell_check [pathname...]\n"
-            "[(--recurse|-r)]\n"
-            "[(--word-regex|-w) <regex>]\n"
-            "[(--filter|-f) <pathname to flex style lexer spec>]\n"
-            "((--dictionary|-d) <pathname to whitespace separated word list>)+\n";
+            "  -r, --recurse\n"
+            "      --include <wildcard>{;<wildcard>}\n"
+            "      --exclude <wildcard>{;<wildcard>}\n"
+            "      --exclude-dir <wildcard>{;<wildcard>}\n"
+            "  -w, --word-regex <regex>\n"
+            "  -f, --filter <pathname to flex style lexer spec>\n"
+            "  -d, --dictionary <pathname to whitespace separated word list>\n";
         return argc == 1;
     }
 
