@@ -17,8 +17,8 @@ spell_check [pathname...]
   -d, --dictionary <pathname to whitespace separated word list>
 ```
 
-- --dictionary can be specified multiple times
-- --recurse means you specify paths to search rather than pathnames
+- `--dictionary` can be specified multiple times
+- `--recurse` means you specify paths to search rather than pathnames
 - If no pathnames are supplied, input is taken from stdin.
 
 ## Dictionaries
