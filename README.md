@@ -2,8 +2,8 @@
 Simple spell checker
 
 ## Building
-- There is a Makefile for Linux
-- There is a VS .sln for Windows
+- There is a `Makefile` for Linux
+- There is a VS `.sln` for Windows
 
 ## Usage
 ```
@@ -17,9 +17,9 @@ spell_check [pathname...]
   -d, --dictionary <pathname to whitespace separated word list>
 ```
 
-- `--dictionary` can be specified multiple times
-- `--recurse` means you specify paths to search rather than pathnames
-- If no pathnames are supplied, input is taken from stdin.
+* `--dictionary` can be specified multiple times
+* `--recurse` means you specify paths to search rather than pathnames
+* If no pathnames are supplied, input is taken from stdin.
 
 ## Dictionaries
 Google: `dictionary word list text file` for sample dictionaries.
