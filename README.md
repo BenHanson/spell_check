@@ -2,8 +2,18 @@
 Simple spell checker
 
 ## Building
-- There is a `Makefile` for Linux
-- There is a VS `.sln` for Windows
+
+A C++20 compatible compiler is required.
+
+```shell
+git clone https://github.com/BenHanson/lexertl17
+git clone https://github.com/BenHanson/parsertl17
+git clone https://github.com/BenHanson/wildcardtl
+git clone https://github.com/BenHanson/spell_check
+```
+
+* Use the `Makefile` when building on Linux
+* Use the `.sln` file when building with Visual Studio
 
 ## Usage
 ```
